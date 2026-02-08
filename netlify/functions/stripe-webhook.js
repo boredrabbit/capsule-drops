@@ -38,10 +38,17 @@ exports.handler = async (event) => {
       const customerName = session.customer_details.name || 'Customer';
       const customerEmail = session.customer_details.email;
       const shippingAddress = session.shipping_details?.address || session.customer_details?.address;
-      const size = session.metadata.size;
+      const size = session.metadata?.size || 'L'; // Default to L if not provided
+
+      console.log('Extracted size:', size);
+      console.log('Session metadata:', JSON.stringify(session.metadata, null, 2));
 
       if (!shippingAddress) {
         throw new Error('No shipping address provided');
+      }
+
+      if (!size) {
+        throw new Error('No size provided in metadata');
       }
 
       // Create Gelato order
