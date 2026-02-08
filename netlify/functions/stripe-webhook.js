@@ -83,10 +83,15 @@ exports.handler = async (event) => {
 };
 
 /**
- * Create an order in Gelato
+ * Create an order in Gelato using Product UID (template-based ordering)
+ * Uses your custom template with perfect positioning!
  */
 async function createGelatoOrder({ customerName, customerEmail, shippingAddress, size, sessionId }) {
   const gelatoEndpoint = 'https://order.gelatoapi.com/v4/orders';
+
+  // Map size to Gelato variant UID format
+  // The product UID stays the same, we just specify the size variant
+  const productUid = GELATO_PRODUCT_UID;
 
   // Map Stripe address to Gelato format
   const orderData = {
@@ -109,11 +114,12 @@ async function createGelatoOrder({ customerName, customerEmail, shippingAddress,
     items: [
       {
         itemReferenceId: `capsule-001-${size}`,
-        productUid: GELATO_PRODUCT_UID,
+        productUid: productUid,
+        variantUid: size.toLowerCase(), // S, M, L, XL, XXL
         quantity: 1,
-        files: [], // Design is already in the product template
         metadata: {
           size: size,
+          product: 'capsule-001-wildest-party',
         },
       },
     ],
