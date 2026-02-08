@@ -96,6 +96,68 @@
     text-align: center;
   }
   .buy-btn:hover { background: #222; }
+  .size-guide-link {
+    font-size: 12px;
+    color: #999;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 12px;
+    display: inline-block;
+    transition: color 0.2s;
+  }
+  .size-guide-link:hover { color: #000; }
+
+  /* ══════════ SIZE GUIDE MODAL ══════════ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-content {
+    background: #fff;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 40px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: none; border: none;
+    font-size: 24px; cursor: pointer;
+    color: #999; transition: color 0.2s;
+  }
+  .modal-close:hover { color: #000; }
+  .modal-title { font-size: 20px; font-weight: 400; margin-bottom: 24px; }
+  .size-table {
+    width: 100%; border-collapse: collapse;
+    margin-bottom: 24px;
+  }
+  .size-table th, .size-table td {
+    border: 1px solid #ddd;
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .size-table th {
+    background: #f8f9fa;
+    font-weight: 700;
+  }
+  .size-table td { font-weight: 400; }
+  .size-notes {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.7;
+  }
+  .size-notes li { margin-bottom: 8px; }
 
   /* ══════════ CHECKOUT ══════════ */
   #page-checkout {
@@ -332,7 +394,7 @@
 
     <div class="print-area">
       <hr class="top-rule">
-      <div class="email-row"><span class="label">From:</span><span class="value">Elon Musk &lt;<span style="display:inline-block;background:#1a1a1a;width:90px;height:11px;vertical-align:middle;margin:0 2px;border-radius:1px;"></span>&gt;</span></div>
+      <div class="email-row"><span class="label">From:</span><span class="value">Elon Musk &lt;<span style="display:inline-block;background:#1a1a1a;width:90px;height:9px;vertical-align:middle;margin:0 2px;border-radius:1px;"></span>&gt;</span></div>
       <div class="email-row"><span class="label">Sent:</span><span class="value">Sunday, November 25, 2012 12:36 AM</span></div>
       <div class="email-row"><span class="label">To:</span><span class="value">Jeffrey Epstein</span></div>
       <div class="email-row"><span class="label">Subject:</span><span class="value">RE:</span></div>
@@ -344,6 +406,66 @@
   <div class="product-name">Capsule 001 — "The Wildest Party"</div>
   <div class="product-price">£29.99</div>
   <button class="buy-btn" onclick="goToCheckout()">Buy</button>
+  <a class="size-guide-link" onclick="openSizeGuide()">Size Guide</a>
+</div>
+
+<!-- ═══ SIZE GUIDE MODAL ═══ -->
+<div class="modal-overlay" id="sizeGuideModal" onclick="closeSizeGuide(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeSizeGuide()">×</button>
+    <div class="modal-title">Size Guide</div>
+
+    <table class="size-table">
+      <thead>
+        <tr>
+          <th>Size</th>
+          <th>Chest (inches)</th>
+          <th>Length (inches)</th>
+          <th>Shoulder (inches)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>S</strong></td>
+          <td>34-36</td>
+          <td>27</td>
+          <td>15.5</td>
+        </tr>
+        <tr>
+          <td><strong>M</strong></td>
+          <td>38-40</td>
+          <td>28</td>
+          <td>17</td>
+        </tr>
+        <tr>
+          <td><strong>L</strong></td>
+          <td>42-44</td>
+          <td>29</td>
+          <td>18.5</td>
+        </tr>
+        <tr>
+          <td><strong>XL</strong></td>
+          <td>46-48</td>
+          <td>30</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <td><strong>XXL</strong></td>
+          <td>50-52</td>
+          <td>31</td>
+          <td>21.5</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="size-notes">
+      <li><strong>Fit:</strong> Classic unisex fit with a slightly oversized, relaxed drape</li>
+      <li><strong>Fabric:</strong> 100% cotton heavyweight (6.0 oz)</li>
+      <li><strong>Care:</strong> Machine wash cold, tumble dry low</li>
+      <li><strong>Sizing tip:</strong> If between sizes, size up for a looser fit or size down for a more fitted look</li>
+      <li><strong>Model:</strong> Measurements shown are garment measurements (laid flat)</li>
+    </ul>
+  </div>
 </div>
 
 <!-- ═══ CHECKOUT ═══ -->
@@ -365,7 +487,7 @@
       </div>
     </div>
     <div class="field-group">
-      <span class="field-label">Size</span>
+      <span class="field-label">Size <a style="color:#999;text-decoration:underline;cursor:pointer;font-size:10px;margin-left:8px;" onclick="openSizeGuide()">Size Guide</a></span>
       <div class="size-options">
         <button class="size-opt" onclick="pickSize(this)">S</button>
         <button class="size-opt" onclick="pickSize(this)">M</button>
@@ -389,6 +511,8 @@
   function goToCheckout(){const a=document.getElementById('page-product'),b=document.getElementById('page-checkout');a.style.opacity='0';setTimeout(()=>{a.style.display='none';b.style.display='block';window.scrollTo(0,0);requestAnimationFrame(()=>{b.style.opacity='1'})},300)}
   function goToProduct(){const a=document.getElementById('page-product'),b=document.getElementById('page-checkout');b.style.opacity='0';setTimeout(()=>{b.style.display='none';a.style.display='flex';window.scrollTo(0,0);requestAnimationFrame(()=>{a.style.opacity='1'})},300)}
   function pickSize(btn){document.querySelectorAll('.size-opt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('selected-size-display').textContent=btn.textContent}
+  function openSizeGuide(){document.getElementById('sizeGuideModal').classList.add('active');document.body.style.overflow='hidden'}
+  function closeSizeGuide(e){if(!e||e.target.classList.contains('modal-overlay')||e.target.classList.contains('modal-close')){document.getElementById('sizeGuideModal').classList.remove('active');document.body.style.overflow=''}}
 </script>
 
 </body>

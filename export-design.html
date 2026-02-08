@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Export Print Design</title>
+<style>
+  body {
+    margin: 40px;
+    background: #f0f0f0;
+    font-family: Arial, sans-serif;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+  }
+  h1 { margin-bottom: 10px; }
+  .instructions {
+    background: #fff3cd;
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+    border-left: 4px solid #ffc107;
+  }
+  .design-preview {
+    background: white;
+    padding: 40px;
+    border: 2px dashed #ccc;
+    margin: 30px 0;
+    display: inline-block;
+  }
+  canvas {
+    border: 1px solid #ddd;
+  }
+  button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 10px 10px 0;
+  }
+  button:hover { background: #333; }
+  .specs {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+  .specs h3 { margin-top: 0; }
+  .specs ul { line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Print-Ready Design Export</h1>
+  <p>For Gelato Print-on-Demand Service</p>
+
+  <div class="instructions">
+    <strong>📋 Instructions:</strong>
+    <ol>
+      <li>Click "Generate Print-Ready PNG" below</li>
+      <li>The design will render at 3600x2400px (300 DPI)</li>
+      <li>Click "Download PNG" to save the file</li>
+      <li>Upload this PNG to Gelato as your t-shirt design</li>
+    </ol>
+  </div>
+
+  <div class="specs">
+    <h3>Design Specifications</h3>
+    <ul>
+      <li><strong>Dimensions:</strong> 12" × 8" (3600 × 2400 pixels)</li>
+      <li><strong>Resolution:</strong> 300 DPI</li>
+      <li><strong>Format:</strong> PNG with transparent background</li>
+      <li><strong>Color Mode:</strong> RGB</li>
+      <li><strong>Placement:</strong> Center chest</li>
+      <li><strong>Print Method:</strong> DTG (Direct to Garment)</li>
+    </ul>
+  </div>
+
+  <button onclick="generateDesign()">Generate Print-Ready PNG</button>
+  <button id="downloadBtn" style="display:none;" onclick="downloadDesign()">Download PNG</button>
+
+  <div class="design-preview">
+    <h3>Preview (scaled down for display)</h3>
+    <canvas id="canvas" width="900" height="600" style="max-width: 100%;"></canvas>
+  </div>
+</div>
+
+<script>
+let fullResCanvas = null;
+
+function generateDesign() {
+  // Create full resolution canvas (3600x2400)
+  fullResCanvas = document.createElement('canvas');
+  fullResCanvas.width = 3600;
+  fullResCanvas.height = 2400;
+  const ctx = fullResCanvas.getContext('2d');
+
+  // Draw the design
+  drawDesign(ctx, 3600, 2400, 120);
+
+  // Also draw preview at 1/4 scale
+  const previewCanvas = document.getElementById('canvas');
+  const previewCtx = previewCanvas.getContext('2d');
+  drawDesign(previewCtx, 900, 600, 30);
+
+  document.getElementById('downloadBtn').style.display = 'inline-block';
+  alert('✅ Design generated! Click "Download PNG" to save the file.');
+}
+
+function drawDesign(ctx, width, height, baseFontSize) {
+  // Clear canvas
+  ctx.clearRect(0, 0, width, height);
+
+  // Set up text properties
+  ctx.fillStyle = '#1a1a1a';
+  ctx.textBaseline = 'middle';
+
+  const scale = width / 3600; // Scale factor for different sizes
+  const fontSize = baseFontSize;
+  const lineHeight = fontSize * 1.65;
+  const labelWidth = fontSize * 5.8;
+
+  let y = fontSize * 1.5;
+
+  // Top rule
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2 * scale;
+  ctx.beginPath();
+  ctx.moveTo(0, y);
+  ctx.lineTo(width, y);
+  ctx.stroke();
+
+  y += fontSize * 1.8;
+
+  // From:
+  ctx.font = `700 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('From:', 0, y);
+  ctx.font = `400 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('Elon Musk <', labelWidth, y);
+
+  // Redacted email
+  const redactX = labelWidth + ctx.measureText('Elon Musk <').width;
+  const redactWidth = fontSize * 7.9;
+  ctx.fillRect(redactX, y - fontSize * 0.45, redactWidth, fontSize * 0.75);
+  ctx.fillText('>', redactX + redactWidth + fontSize * 0.15, y);
+
+  y += lineHeight;
+
+  // Sent:
+  ctx.font = `700 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('Sent:', 0, y);
+  ctx.font = `400 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('Sunday, November 25, 2012 12:36 AM', labelWidth, y);
+
+  y += lineHeight;
+
+  // To:
+  ctx.font = `700 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('To:', 0, y);
+  ctx.font = `400 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('Jeffrey Epstein', labelWidth, y);
+
+  y += lineHeight;
+
+  // Subject:
+  ctx.font = `700 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('Subject:', 0, y);
+  ctx.font = `400 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('RE:', labelWidth, y);
+
+  y += lineHeight * 2.2;
+
+  // Body
+  ctx.font = `400 ${fontSize}px Calibri, 'Segoe UI', sans-serif`;
+  ctx.fillText('What day/night will be the wildest party on your island?', 0, y);
+}
+
+function downloadDesign() {
+  if (!fullResCanvas) {
+    alert('Please generate the design first!');
+    return;
+  }
+
+  fullResCanvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'capsule-001-wildest-party-print-ready.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}
+</script>
+
+</body>
+</html>

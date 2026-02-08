@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="3600" height="2400" viewBox="0 0 3600 2400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Print-ready design at 300 DPI: 12" x 8" -->
+  <!-- For Gelato: Export as PNG at 3600x2400px -->
+
+  <style>
+    .email-text {
+      font-family: Calibri, 'Segoe UI', sans-serif;
+      fill: #1a1a1a;
+    }
+    .label {
+      font-weight: 700;
+    }
+    .value {
+      font-weight: 400;
+    }
+  </style>
+
+  <!-- Top rule -->
+  <line x1="0" y1="0" x2="3600" y2="0" stroke="#1a1a1a" stroke-width="20"/>
+
+  <!-- From: -->
+  <text x="0" y="180" class="email-text label" font-size="120">From:</text>
+  <text x="740" y="180" class="email-text value" font-size="120">Elon Musk &lt;</text>
+  <rect x="1440" y="126" width="950" height="90" fill="#1a1a1a" rx="10"/>
+  <text x="2410" y="180" class="email-text value" font-size="120">&gt;</text>
+
+  <!-- Sent: -->
+  <text x="0" y="380" class="email-text label" font-size="120">Sent:</text>
+  <text x="740" y="380" class="email-text value" font-size="120">Sunday, November 25, 2012 12:36 AM</text>
+
+  <!-- To: -->
+  <text x="0" y="580" class="email-text label" font-size="120">To:</text>
+  <text x="740" y="580" class="email-text value" font-size="120">Jeffrey Epstein</text>
+
+  <!-- Subject: -->
+  <text x="0" y="780" class="email-text label" font-size="120">Subject:</text>
+  <text x="740" y="780" class="email-text value" font-size="120">RE:</text>
+
+  <!-- Body gap -->
+
+  <!-- Email body -->
+  <text x="0" y="1180" class="email-text value" font-size="120">What day/night will be the wildest party on your island?</text>
+</svg>
