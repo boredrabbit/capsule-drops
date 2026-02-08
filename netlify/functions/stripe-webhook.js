@@ -95,7 +95,7 @@ exports.handler = async (event) => {
  * Uses your custom template with perfect positioning!
  */
 async function createGelatoOrder({ customerName, customerEmail, shippingAddress, size, sessionId }) {
-  const gelatoEndpoint = 'https://api.gelato.com/v4/orders';
+  const gelatoEndpoint = 'https://order.gelatoapis.com/v4/orders';
 
   // Map size to Gelato variant UID format
   // The product UID stays the same, we just specify the size variant
@@ -139,7 +139,7 @@ async function createGelatoOrder({ customerName, customerEmail, shippingAddress,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': GELATO_API_KEY,
+      'X-API-KEY': GELATO_API_KEY,
     },
     body: JSON.stringify(orderData),
   });
