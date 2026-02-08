@@ -502,17 +502,59 @@
       <div class="total-row"><span>Shipping</span><span>Free</span></div>
       <div class="total-row final"><span>Total</span><span>£29.99</span></div>
     </div>
-    <button class="pay-btn" onclick="window.location.href='https://buy.stripe.com/aFa3cncCbfO61Wg8AQ8EM00'">Pay £29.99</button>
+    <button class="pay-btn" id="payButton" onclick="handlePayment()">Pay £29.99</button>
     <div class="secure-note">Secure checkout powered by Stripe · Free worldwide shipping · Fulfilled by Gelato</div>
   </div>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
+  const stripe = Stripe('pk_live_51SyaPJ11qoNzOweuaKvduLfYaw5qVXmJglGYsIEVZxYzj5aEUR7q1ZSu7Zw7LjNvyTR0Bc8DaMDaKq0KEazFknVl00925fGB3o');
+
   function goToCheckout(){const a=document.getElementById('page-product'),b=document.getElementById('page-checkout');a.style.opacity='0';setTimeout(()=>{a.style.display='none';b.style.display='block';window.scrollTo(0,0);requestAnimationFrame(()=>{b.style.opacity='1'})},300)}
   function goToProduct(){const a=document.getElementById('page-product'),b=document.getElementById('page-checkout');b.style.opacity='0';setTimeout(()=>{b.style.display='none';a.style.display='flex';window.scrollTo(0,0);requestAnimationFrame(()=>{a.style.opacity='1'})},300)}
   function pickSize(btn){document.querySelectorAll('.size-opt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('selected-size-display').textContent=btn.textContent}
   function openSizeGuide(){document.getElementById('sizeGuideModal').classList.add('active');document.body.style.overflow='hidden'}
   function closeSizeGuide(e){if(!e||e.target.classList.contains('modal-overlay')||e.target.classList.contains('modal-close')){document.getElementById('sizeGuideModal').classList.remove('active');document.body.style.overflow=''}}
+
+  async function handlePayment() {
+    const payButton = document.getElementById('payButton');
+    const selectedSize = document.querySelector('.size-opt.active').textContent;
+
+    // Disable button and show loading
+    payButton.disabled = true;
+    payButton.textContent = 'Processing...';
+
+    try {
+      // Call Netlify Function to create checkout session
+      const response = await fetch('/.netlify/functions/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          size: selectedSize,
+          quantity: 1
+        }),
+      });
+
+      const { sessionId, error } = await response.json();
+
+      if (error) {
+        throw new Error(error);
+      }
+
+      // Redirect to Stripe Checkout
+      const result = await stripe.redirectToCheckout({ sessionId });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Payment failed: ' + error.message);
+      payButton.disabled = false;
+      payButton.textContent = 'Pay £29.99';
+    }
+  }
 </script>
 
 </body>

@@ -35,7 +35,14 @@ exports.handler = async (event) => {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.URL}/success`,
+      shipping_address_collection: {
+        allowed_countries: ['GB', 'US', 'CA', 'AU', 'FR', 'DE', 'ES', 'IT', 'NL', 'BE', 'SE', 'NO', 'DK', 'FI', 'IE', 'AT', 'CH', 'PL', 'CZ', 'PT', 'GR', 'NZ', 'SG', 'HK', 'JP', 'KR'],
+      },
+      metadata: {
+        size: size,
+        product: 'capsule-001-wildest-party',
+      },
+      success_url: `${process.env.URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.URL}/cancel`,
     });
 
