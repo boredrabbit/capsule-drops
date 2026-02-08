@@ -139,7 +139,7 @@ async function createGelatoOrder({ customerName, customerEmail, shippingAddress,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${Buffer.from(GELATO_API_KEY).toString('base64')}`,
+      'x-api-key': GELATO_API_KEY,
     },
     body: JSON.stringify(orderData),
   });
