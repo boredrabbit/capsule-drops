@@ -1,4 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const fetch = require('node-fetch');
 
 // Gelato API configuration
 const GELATO_API_KEY = process.env.GELATO_API_KEY;
