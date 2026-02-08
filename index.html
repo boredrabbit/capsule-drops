@@ -375,36 +375,14 @@
       </div>
     </div>
     <hr class="section-divider">
-    <div class="section-title">Shipping</div>
-    <div class="form-row">
-      <div class="field"><label>First name</label><input type="text" placeholder="John"></div>
-      <div class="field"><label>Last name</label><input type="text" placeholder="Smith"></div>
-    </div>
-    <div class="form-row full"><div class="field"><label>Email</label><input type="email" placeholder="john@email.com"></div></div>
-    <div class="form-row full"><div class="field"><label>Address</label><input type="text" placeholder="123 Street Name"></div></div>
-    <div class="form-row">
-      <div class="field"><label>City</label><input type="text" placeholder="London"></div>
-      <div class="field"><label>Postcode</label><input type="text" placeholder="SW1A 1AA"></div>
-    </div>
-    <div class="form-row full">
-      <div class="field"><label>Country</label>
-        <select><option>United Kingdom</option><option>United States</option><option>Canada</option><option>Australia</option><option>Germany</option><option>France</option><option>Other</option></select>
-      </div>
-    </div>
-    <hr class="section-divider">
-    <div class="section-title">Payment</div>
-    <div class="card-row">
-      <div class="field"><label>Card number</label><input type="text" placeholder="4242 4242 4242 4242"></div>
-      <div class="field"><label>Expiry</label><input type="text" placeholder="MM/YY"></div>
-      <div class="field"><label>CVC</label><input type="text" placeholder="123"></div>
-    </div>
     <div class="totals">
       <div class="total-row"><span>Subtotal</span><span>£29.99</span></div>
       <div class="total-row"><span>Shipping</span><span>Free</span></div>
       <div class="total-row final"><span>Total</span><span>£29.99</span></div>
     </div>
-    <button class="pay-btn">Pay £29.99</button>
-    <div class="secure-note">Secure checkout · Free worldwide shipping · Fulfilled by Gelato</div>
+    <button class="pay-btn" onclick="handleCheckout()">Pay £29.99</button>
+    <div id="payment-status"></div>
+    <div class="secure-note">Secure checkout powered by Stripe · Free worldwide shipping · Fulfilled by Gelato</div>
   </div>
 </div>
 
@@ -412,6 +390,35 @@
   function goToCheckout(){const a=document.getElementById('page-product'),b=document.getElementById('page-checkout');a.style.opacity='0';setTimeout(()=>{a.style.display='none';b.style.display='block';window.scrollTo(0,0);requestAnimationFrame(()=>{b.style.opacity='1'})},300)}
   function goToProduct(){const a=document.getElementById('page-product'),b=document.getElementById('page-checkout');b.style.opacity='0';setTimeout(()=>{b.style.display='none';a.style.display='flex';window.scrollTo(0,0);requestAnimationFrame(()=>{a.style.opacity='1'})},300)}
   function pickSize(btn){document.querySelectorAll('.size-opt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('selected-size-display').textContent=btn.textContent}
+
+  async function handleCheckout() {
+    const size = document.querySelector('.size-opt.active').textContent;
+    const statusEl = document.getElementById('payment-status');
+    const payBtn = document.querySelector('.pay-btn');
+    
+    payBtn.disabled = true;
+    statusEl.textContent = 'Processing...';
+    
+    try {
+      const response = await fetch('/.netlify/functions/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ size, quantity: 1 })
+      });
+      
+      const data = await response.json();
+      
+      if (data.sessionId) {
+        window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
+      } else {
+        statusEl.textContent = 'Error: ' + (data.error || 'Unknown error');
+        payBtn.disabled = false;
+      }
+    } catch (err) {
+      statusEl.textContent = 'Error: Could not connect to payment processor';
+      payBtn.disabled = false;
+    }
+  }
 </script>
 
 </body>

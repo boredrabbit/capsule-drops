@@ -1,0 +1,9 @@
+{
+  "name": "capsule-drops-checkout",
+  "version": "1.0.0",
+  "description": "Stripe checkout for Capsule Drops",
+  "main": "netlify/functions/create-checkout.js",
+  "dependencies": {
+    "stripe": "^11.0.0"
+  }
+}
