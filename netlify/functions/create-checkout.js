@@ -1,13 +1,19 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
-  console.log('Environment variables:', {
-    hasSecretKey: !!process.env.STRIPE_SECRET_KEY,
-    secretKeyStart: process.env.STRIPE_SECRET_KEY?.substring(0, 10),
-  });
-
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { 
+      statusCode: 405, 
+      body: JSON.stringify({ error: 'Method Not Allowed' }) 
+    };
+  }
+
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('STRIPE_SECRET_KEY not found in environment');
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Stripe API key not configured' })
+    };
   }
 
   try {
@@ -22,7 +28,6 @@ exports.handler = async (event) => {
             product_data: {
               name: 'Capsule 001 - "The Wildest Party"',
               description: `White heavyweight tee, size ${size}`,
-              images: ['https://tangerine-haupia-038440.netlify.app/tee-image.png'],
             },
             unit_amount: 2999, // £29.99 in pence
           },
@@ -39,6 +44,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ sessionId: session.id }),
     };
   } catch (error) {
+    console.error('Stripe error:', error.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message }),
