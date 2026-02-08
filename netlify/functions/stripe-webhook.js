@@ -99,8 +99,8 @@ async function createGelatoOrder({ customerName, customerEmail, shippingAddress,
 
   // Map size to specific Gelato Product UID (each size variant has its own UID)
   const sizeToProductUid = {
-    'XS': '7e04abe1-1b23-41c0-9618-180468a239a3',
-    'S': 'fd2de83e-3a10-499d-ad07-438d1d45f5fc',
+    'XS': '7604abe1-1b23-41c0-9618-180468a239a3',
+    'S': 'fd2de83e-3a10-499d-ad67-438d1d45f5fc',
     'M': 'd026e986-be9d-412c-9345-3370ec7b898a',
     'L': '33d25c14-5d75-496c-89ae-d50f60cecb3b',
     'XL': '6aed96a9-3cba-487c-9e20-d438bb11bf36',
